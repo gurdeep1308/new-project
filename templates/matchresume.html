@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Matcher</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f2f6fc;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 60px auto;
+            background: white;
+            padding: 40px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            border-radius: 12px;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 20px;
+            color: #34495e;
+        }
+        textarea, input[type="file"] {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+        .btn {
+            background: #3498db;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 30px;
+            font-size: 16px;
+            width: 100%;
+        }
+        .btn:hover {
+            background: #2980b9;
+        }
+        .results {
+            margin-top: 40px;
+        }
+        .result-card {
+            background: #ecf0f1;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 5px solid #3498db;
+        }
+        .score {
+            font-weight: bold;
+            float: right;
+            color: #27ae60;
+        }
+        .message {
+            text-align: center;
+            font-weight: bold;
+            margin-top: 20px;
+            color: #e74c3c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Smart Resume Matcher</h1>
+        <form action="/matcher" method="POST" enctype="multipart/form-data">
+            <label for="job_description">Job Description</label>
+            <textarea name="job_description" rows="6" placeholder="Paste job description here..." required></textarea>
+
+            <label for="resumes">Upload Resumes (PDF, DOCX, TXT)</label>
+            <input type="file" name="resumes" multiple required>
+
+            <button class="btn" type="submit">Match Resumes</button>
+        </form>
+
+        {% if message %}
+            <div class="message">{{ message }}</div>
+        {% endif %}
+
+        {% if top_resumes %}
+        <div class="results">
+            <h2>📄 Top Matching Resumes</h2>
+            {% for resume, score in zip(top_resumes, similarity_scores) %}
+                <div class="result-card">
+                    {{ resume }} <span class="score">Similarity: {{ score }}</span>
+                </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
